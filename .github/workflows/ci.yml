@@ -1,13 +1,13 @@
-name: C++ CI
+name: Build and Test C++ Project
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,24 +16,18 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install -y build-essential cmake libgtest-dev
+        sudo apt-get update
+        sudo apt-get install -y g++ make cmake libgtest-dev
         cd /usr/src/gtest
         sudo cmake .
         sudo make
         sudo cp lib/*.a /usr/lib
 
-    - name: Build main.cpp
+    - name: Build main and tests
       working-directory: src
-      run: make
-
-    - name: Run main
-      working-directory: src
-      run: ./main
-
-    - name: Build tests
-      working-directory: src
-      run: make test
+      run: |
+        make
+        make test
 
     - name: Run tests
       working-directory: src
